@@ -1,0 +1,34 @@
+name:                type-combinators-singletons
+version:             0.1.0.0
+synopsis:            type-combinators and singletons compatibility
+description:         See README.md
+homepage:            https://github.com/mstksg/type-combinators-singletons
+license:             BSD3
+license-file:        LICENSE
+author:              Justin Le
+maintainer:          justin@jle.im
+copyright:           (c) Justin Le 2017
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:     Data.Type.Combinator.Singleton
+  build-depends:       base >= 4.7 && < 5
+                     , type-combinators
+  default-language:    Haskell2010
+
+-- test-suite type-combinators-singletons-test
+--   type:                exitcode-stdio-1.0
+--   hs-source-dirs:      test
+--   main-is:             Spec.hs
+--   build-depends:       base
+--                      , type-combinators-singletons
+--   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
+--   default-language:    Haskell2010
+
+source-repository head
+  type:     git
+  location: https://github.com/mstksg/type-combinators-singletons
