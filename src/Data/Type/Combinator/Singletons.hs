@@ -1,6 +1,8 @@
 {-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE GADTs                 #-}
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeInType            #-}
 {-# LANGUAGE TypeOperators         #-}
@@ -12,6 +14,9 @@ module Data.Type.Combinator.Singletons (
   , singLength
   , boolSing
   , singBool
+  , Sing(SZ, SS), SN, ZSym0, SSym0, SSym1
+  , natSing
+  , singNat
   , parSing
   , singPar
   , choiceSing
@@ -23,6 +28,7 @@ module Data.Type.Combinator.Singletons (
 import           Data.Kind
 import           Data.Singletons
 import           Data.Singletons.Prelude
+import           Data.Singletons.TH
 import           Data.Type.Boolean
 import           Data.Type.Conjunction
 import           Data.Type.Disjunction
@@ -31,8 +37,10 @@ import           Data.Type.Option
 import           Data.Type.Product
 import           Type.Class.Higher
 import           Type.Class.Known
+import           Data.Type.Nat
 import           Type.Class.Witness
 import           Type.Family.Constraint
+import           Type.Family.Nat
 
 instance SingI a => Known Sing a where
     type KnownC Sing a = SingI a
@@ -76,6 +84,18 @@ singBool :: Sing a -> Boolean a
 singBool = \case
     SFalse -> False_
     STrue  -> True_
+
+genSingletons [''N]
+
+natSing :: Nat a -> Sing a
+natSing = \case
+    Z_   -> SZ
+    S_ n -> SS (natSing n)
+
+singNat :: Sing a -> Nat a
+singNat = \case
+    SZ   -> Z_
+    SS n -> S_ (singNat n)
 
 parSing :: (Sing :*: Sing) '(a, b) -> Sing '(a, b)
 parSing (x :*: y) = STuple2 x y
