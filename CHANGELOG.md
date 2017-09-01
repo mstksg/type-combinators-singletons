@@ -4,9 +4,9 @@ Changelog
 Version 0.1.0.0
 ---------------
 
-*Aug 31, 2017*
+*Sep 1, 2017*
 
-<https://github.com/mstksg/type-combinator-singletons/releases/tag/v0.1.0.0>
+<https://github.com/mstksg/type-combinators-singletons/releases/tag/v0.1.0.0>
 
 *   Initial release.
 

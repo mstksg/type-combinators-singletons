@@ -14,11 +14,13 @@ build-type:          Simple
 extra-source-files:  README.md
                      CHANGELOG.md
 cabal-version:       >=1.10
+tested-with:         GHC == 8.0.2
+                   , GHC == 8.2.1
 
 library
   hs-source-dirs:      src
   exposed-modules:     Data.Type.Combinator.Singletons
-  build-depends:       base >= 4.7 && < 5
+  build-depends:       base >= 4.9 && < 5
                      , type-combinators
                      , singletons
   default-language:    Haskell2010
