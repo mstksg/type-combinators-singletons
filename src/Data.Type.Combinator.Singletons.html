@@ -2,169 +2,142 @@
 </span><a name="line-2"></a><span class="hs-pragma">{-# LANGUAGE GADTs                 #-}</span><span>
 </span><a name="line-3"></a><span class="hs-pragma">{-# LANGUAGE LambdaCase            #-}</span><span>
 </span><a name="line-4"></a><span class="hs-pragma">{-# LANGUAGE MultiParamTypeClasses #-}</span><span>
-</span><a name="line-5"></a><span class="hs-pragma">{-# LANGUAGE TemplateHaskell       #-}</span><span>
-</span><a name="line-6"></a><span class="hs-pragma">{-# LANGUAGE TypeFamilies          #-}</span><span>
-</span><a name="line-7"></a><span class="hs-pragma">{-# LANGUAGE TypeInType            #-}</span><span>
-</span><a name="line-8"></a><span class="hs-pragma">{-# LANGUAGE TypeOperators         #-}</span><span>
-</span><a name="line-9"></a><span class="hs-pragma">{-# OPTIONS_GHC -fno-warn-orphans  #-}</span><span>
-</span><a name="line-10"></a><span>
-</span><a name="line-11"></a><span class="hs-comment">-- |</span><span>
-</span><a name="line-12"></a><span class="hs-comment">-- Module      : Data.Type.Combinator.Singletons</span><span>
-</span><a name="line-13"></a><span class="hs-comment">-- Description : Conversions between datatypes in /type-combinators/ and</span><span>
-</span><a name="line-14"></a><span class="hs-comment">--               singletons from /singletons/.</span><span>
-</span><a name="line-15"></a><span class="hs-comment">-- Copyright   : (c) Justin Le 2017</span><span>
-</span><a name="line-16"></a><span class="hs-comment">-- License     : BSD-3</span><span>
-</span><a name="line-17"></a><span class="hs-comment">-- Maintainer  : justin@jle.im</span><span>
-</span><a name="line-18"></a><span class="hs-comment">-- Stability   : unstable</span><span>
-</span><a name="line-19"></a><span class="hs-comment">-- Portability : portable</span><span>
-</span><a name="line-20"></a><span class="hs-comment">--</span><span>
-</span><a name="line-21"></a><span class="hs-comment">-- There's a lot of identical data types between /type-combinators/ and</span><span>
-</span><a name="line-22"></a><span class="hs-comment">-- /singetons/, as well as similar typeclasses.  This module provides</span><span>
-</span><a name="line-23"></a><span class="hs-comment">-- conversion functions between the two, and also many appropriate</span><span>
-</span><a name="line-24"></a><span class="hs-comment">-- instances.</span><span>
-</span><a name="line-25"></a><span class="hs-comment">--</span><span>
-</span><a name="line-26"></a><span>
-</span><a name="line-27"></a><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Combinator</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span> </span><span class="hs-special">(</span><span>
-</span><a name="line-28"></a><span>    </span><a href="Data.Type.Combinator.Singletons.html#prodSing"><span class="hs-identifier hs-var">prodSing</span></a><span>
-</span><a name="line-29"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singProd"><span class="hs-identifier hs-var">singProd</span></a><span>
-</span><a name="line-30"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singLength"><span class="hs-identifier hs-var">singLength</span></a><span>
-</span><a name="line-31"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#boolSing"><span class="hs-identifier hs-var">boolSing</span></a><span>
-</span><a name="line-32"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singBool"><span class="hs-identifier hs-var">singBool</span></a><span>
+</span><a name="line-5"></a><span class="hs-pragma">{-# LANGUAGE PolyKinds             #-}</span><span>
+</span><a name="line-6"></a><span class="hs-pragma">{-# LANGUAGE TemplateHaskell       #-}</span><span>
+</span><a name="line-7"></a><span class="hs-pragma">{-# LANGUAGE TypeFamilies          #-}</span><span>
+</span><a name="line-8"></a><span class="hs-pragma">{-# LANGUAGE TypeInType            #-}</span><span>
+</span><a name="line-9"></a><span class="hs-pragma">{-# LANGUAGE TypeOperators         #-}</span><span>
+</span><a name="line-10"></a><span class="hs-pragma">{-# OPTIONS_GHC -fno-warn-orphans  #-}</span><span>
+</span><a name="line-11"></a><span>
+</span><a name="line-12"></a><span class="hs-comment">-- |</span><span>
+</span><a name="line-13"></a><span class="hs-comment">-- Module      : Data.Type.Combinator.Singletons</span><span>
+</span><a name="line-14"></a><span class="hs-comment">-- Description : Conversions between datatypes in /type-combinators/ and</span><span>
+</span><a name="line-15"></a><span class="hs-comment">--               singletons from /singletons/ and orphan instances.</span><span>
+</span><a name="line-16"></a><span class="hs-comment">-- Copyright   : (c) Justin Le 2017</span><span>
+</span><a name="line-17"></a><span class="hs-comment">-- License     : BSD-3</span><span>
+</span><a name="line-18"></a><span class="hs-comment">-- Maintainer  : justin@jle.im</span><span>
+</span><a name="line-19"></a><span class="hs-comment">-- Stability   : unstable</span><span>
+</span><a name="line-20"></a><span class="hs-comment">-- Portability : portable</span><span>
+</span><a name="line-21"></a><span class="hs-comment">--</span><span>
+</span><a name="line-22"></a><span class="hs-comment">-- There's a lot of identical data types between /type-combinators/ and</span><span>
+</span><a name="line-23"></a><span class="hs-comment">-- /singetons/, as well as similar typeclasses.  This module provides</span><span>
+</span><a name="line-24"></a><span class="hs-comment">-- conversion functions between the two (through the 'TC' typeclass), and</span><span>
+</span><a name="line-25"></a><span class="hs-comment">-- also many appropriate orphan instances.</span><span>
+</span><a name="line-26"></a><span class="hs-comment">--</span><span>
+</span><a name="line-27"></a><span>
+</span><a name="line-28"></a><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Combinator</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span> </span><span class="hs-special">(</span><span>
+</span><a name="line-29"></a><span>  </span><span class="hs-comment">-- * Conversion functions</span><span>
+</span><a name="line-30"></a><span>    </span><a href="Data.Type.Combinator.Singletons.html#TC"><span class="hs-identifier hs-type">TC</span></a><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><a name="line-31"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singLength"><span class="hs-identifier hs-var">singLength</span></a><span>
+</span><a name="line-32"></a><span>  </span><span class="hs-comment">-- * Orphan singleton instance for 'N'</span><span>
 </span><a name="line-33"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-type">Sing</span><span class="hs-special">(</span><a href="Data.Type.Combinator.Singletons.html#SZ"><span class="hs-identifier hs-var">SZ</span></a><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#SS"><span class="hs-identifier hs-var">SS</span></a><span class="hs-special">)</span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#SN"><span class="hs-identifier hs-type">SN</span></a><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#ZSym0"><span class="hs-identifier hs-type">ZSym0</span></a><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#SSym0"><span class="hs-identifier hs-type">SSym0</span></a><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#SSym1"><span class="hs-identifier hs-type">SSym1</span></a><span>
-</span><a name="line-34"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#natSing"><span class="hs-identifier hs-var">natSing</span></a><span>
-</span><a name="line-35"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singNat"><span class="hs-identifier hs-var">singNat</span></a><span>
-</span><a name="line-36"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#parSing"><span class="hs-identifier hs-var">parSing</span></a><span>
-</span><a name="line-37"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singPar"><span class="hs-identifier hs-var">singPar</span></a><span>
-</span><a name="line-38"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#choiceSing"><span class="hs-identifier hs-var">choiceSing</span></a><span>
-</span><a name="line-39"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singChoice"><span class="hs-identifier hs-var">singChoice</span></a><span>
-</span><a name="line-40"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#optionSing"><span class="hs-identifier hs-var">optionSing</span></a><span>
-</span><a name="line-41"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singOption"><span class="hs-identifier hs-var">singOption</span></a><span>
-</span><a name="line-42"></a><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><a name="line-43"></a><span>
-</span><a name="line-44"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Kind</span><span>
-</span><a name="line-45"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span>
-</span><a name="line-46"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span class="hs-operator">.</span><span class="hs-identifier">Prelude</span><span>
-</span><a name="line-47"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span class="hs-operator">.</span><span class="hs-identifier">TH</span><span>
-</span><a name="line-48"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Boolean</span><span>
-</span><a name="line-49"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Conjunction</span><span>
-</span><a name="line-50"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Disjunction</span><span>
-</span><a name="line-51"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Length</span><span>
-</span><a name="line-52"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Option</span><span>
-</span><a name="line-53"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Product</span><span>
-</span><a name="line-54"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Class</span><span class="hs-operator">.</span><span class="hs-identifier">Higher</span><span>
-</span><a name="line-55"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Class</span><span class="hs-operator">.</span><span class="hs-identifier">Known</span><span>
-</span><a name="line-56"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Nat</span><span>
-</span><a name="line-57"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Class</span><span class="hs-operator">.</span><span class="hs-identifier">Witness</span><span>
-</span><a name="line-58"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Family</span><span class="hs-operator">.</span><span class="hs-identifier">Constraint</span><span>
-</span><a name="line-59"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Family</span><span class="hs-operator">.</span><span class="hs-identifier">Nat</span><span>
-</span><a name="line-60"></a><span>
-</span><a name="line-61"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">SingI</span><span> </span><a href="#local-6989586621679100199"><span class="hs-identifier hs-type">a</span></a><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-identifier hs-type">Known</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100199"><span class="hs-identifier hs-type">a</span></a><span> </span><span class="hs-keyword">where</span><span>
-</span><a name="line-62"></a><span>    </span><span class="hs-keyword">type</span><span> </span><span class="hs-identifier">KnownC</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100199"><span class="hs-identifier hs-type">a</span></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-type">SingI</span><span> </span><a href="#local-6989586621679100199"><span class="hs-identifier hs-type">a</span></a><span>
-</span><a name="line-63"></a><span>    </span><a name="local-8214565720323802286"><span class="hs-identifier">known</span></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">sing</span><span>
-</span><a name="line-64"></a><span>
-</span><a name="line-65"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">Witness</span><span> </span><span class="hs-identifier hs-type">&#216;C</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">SingI</span><span> </span><a href="#local-6989586621679100196"><span class="hs-identifier hs-type">a</span></a><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100196"><span class="hs-identifier hs-type">a</span></a><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><a name="line-66"></a><span>    </span><a name="local-6989586621679100197"><a href="#local-6989586621679100197"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802262"><span class="hs-operator">\\</span></a><span> </span><a name="local-6989586621679100198"><a href="#local-6989586621679100198"><span class="hs-identifier">s</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">withSingI</span><span> </span><a href="#local-6989586621679100198"><span class="hs-identifier hs-var">s</span></a><span> </span><a href="#local-6989586621679100197"><span class="hs-identifier hs-var">x</span></a><span>
-</span><a name="line-67"></a><span>
-</span><a name="line-68"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">SEq</span><span> </span><a href="#local-6989586621679100191"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-identifier hs-type">Eq1</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-glyph">::</span><span> </span><a href="#local-6989586621679100191"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Type</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><a name="line-69"></a><span>    </span><a name="local-8214565720323802024"><span class="hs-identifier">eq1</span></a><span>  </span><a name="local-6989586621679100192"><a href="#local-6989586621679100192"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-6989586621679100193"><a href="#local-6989586621679100193"><span class="hs-identifier">y</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100192"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:==</span><span> </span><a href="#local-6989586621679100193"><span class="hs-identifier hs-var">y</span></a><span>
-</span><a name="line-70"></a><span>    </span><a name="local-8214565720323802023"><span class="hs-identifier">neq1</span></a><span> </span><a name="local-6989586621679100194"><a href="#local-6989586621679100194"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-6989586621679100195"><a href="#local-6989586621679100195"><span class="hs-identifier">y</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100194"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:/=</span><span> </span><a href="#local-6989586621679100195"><span class="hs-identifier hs-var">y</span></a><span>
-</span><a name="line-71"></a><span>
-</span><a name="line-72"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">SOrd</span><span> </span><a href="#local-6989586621679100179"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-identifier hs-type">Ord1</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-glyph">::</span><span> </span><a href="#local-6989586621679100179"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Type</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
-</span><a name="line-73"></a><span>    </span><a name="local-8214565720323802036"><span class="hs-identifier">compare1</span></a><span> </span><a name="local-6989586621679100180"><a href="#local-6989586621679100180"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-6989586621679100181"><a href="#local-6989586621679100181"><span class="hs-identifier">y</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><span class="hs-identifier hs-var">sCompare</span><span> </span><a href="#local-6989586621679100180"><span class="hs-identifier hs-var">x</span></a><span> </span><a href="#local-6989586621679100181"><span class="hs-identifier hs-var">y</span></a><span>
-</span><a name="line-74"></a><span>    </span><a name="local-6989586621679100182"><a href="#local-6989586621679100182"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802035"><span class="hs-operator">&lt;#</span></a><span> </span><a name="local-6989586621679100183"><a href="#local-6989586621679100183"><span class="hs-identifier">y</span></a></a><span>       </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100182"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&lt;</span><span> </span><a href="#local-6989586621679100183"><span class="hs-identifier hs-var">y</span></a><span>
-</span><a name="line-75"></a><span>    </span><a name="local-6989586621679100184"><a href="#local-6989586621679100184"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802034"><span class="hs-operator">&gt;#</span></a><span> </span><a name="local-6989586621679100185"><a href="#local-6989586621679100185"><span class="hs-identifier">y</span></a></a><span>       </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100184"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&gt;</span><span> </span><a href="#local-6989586621679100185"><span class="hs-identifier hs-var">y</span></a><span>
-</span><a name="line-76"></a><span>    </span><a name="local-6989586621679100186"><a href="#local-6989586621679100186"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802033"><span class="hs-operator">&lt;=#</span></a><span> </span><a name="local-6989586621679100187"><a href="#local-6989586621679100187"><span class="hs-identifier">y</span></a></a><span>      </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100186"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&lt;=</span><span> </span><a href="#local-6989586621679100187"><span class="hs-identifier hs-var">y</span></a><span>
-</span><a name="line-77"></a><span>    </span><a name="local-6989586621679100188"><a href="#local-6989586621679100188"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802032"><span class="hs-operator">&gt;=#</span></a><span> </span><a name="local-6989586621679100189"><a href="#local-6989586621679100189"><span class="hs-identifier">y</span></a></a><span>      </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100188"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&gt;=</span><span> </span><a href="#local-6989586621679100189"><span class="hs-identifier hs-var">y</span></a><span>
-</span><a name="line-78"></a><span>
-</span><a name="line-79"></a><span class="hs-comment">-- | Convert a 'Prod' of 'Sing's of individual values in @as@ to a 'Sing'</span><span>
-</span><a name="line-80"></a><span class="hs-comment">-- for all @as@ together.</span><span>
-</span><a name="line-81"></a><span class="hs-identifier">prodSing</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Prod</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-keyword">as</span><span>
-</span><a name="line-82"></a><a name="prodSing"><a href="Data.Type.Combinator.Singletons.html#prodSing"><span class="hs-identifier">prodSing</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-keyword">case</span><span>
-</span><a name="line-83"></a><span>    </span><span class="hs-identifier hs-var">&#216;</span><span>       </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">SNil</span><span>
-</span><a name="line-84"></a><span>    </span><a name="local-6989586621679100173"><a href="#local-6989586621679100173"><span class="hs-identifier">x</span></a></a><span> </span><span class="hs-operator hs-var">:&lt;</span><span> </span><a name="local-6989586621679100174"><a href="#local-6989586621679100174"><span class="hs-identifier">xs</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><a href="#local-6989586621679100173"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-special">`</span><span class="hs-identifier hs-var">SCons</span><span class="hs-special">`</span><span> </span><a href="Data.Type.Combinator.Singletons.html#prodSing"><span class="hs-identifier hs-var">prodSing</span></a><span> </span><a href="#local-6989586621679100174"><span class="hs-identifier hs-var">xs</span></a><span>
-</span><a name="line-85"></a><span>
-</span><a name="line-86"></a><span class="hs-comment">-- | Convert a 'Sing' for @as@ to a 'Prod' of 'Sing's of each individual</span><span>
-</span><a name="line-87"></a><span class="hs-comment">-- value in @as@.</span><span>
-</span><a name="line-88"></a><span class="hs-identifier">singProd</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Prod</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-keyword">as</span><span>
-</span><a name="line-89"></a><a name="singProd"><a href="Data.Type.Combinator.Singletons.html#singProd"><span class="hs-identifier">singProd</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-keyword">case</span><span>
-</span><a name="line-90"></a><span>    </span><span class="hs-identifier hs-var">SNil</span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">&#216;</span><span>
-</span><a name="line-91"></a><span>    </span><a name="local-6989586621679100175"><a href="#local-6989586621679100175"><span class="hs-identifier">x</span></a></a><span> </span><span class="hs-special">`</span><span class="hs-identifier hs-var">SCons</span><span class="hs-special">`</span><span> </span><a name="local-6989586621679100176"><a href="#local-6989586621679100176"><span class="hs-identifier">xs</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><a href="#local-6989586621679100175"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">:&lt;</span><span> </span><a href="Data.Type.Combinator.Singletons.html#singProd"><span class="hs-identifier hs-var">singProd</span></a><span> </span><a href="#local-6989586621679100176"><span class="hs-identifier hs-var">xs</span></a><span>
-</span><a name="line-92"></a><span>
-</span><a name="line-93"></a><span class="hs-comment">-- | Convert a 'Sing' for @as@ into a 'Length' representing the length of</span><span>
-</span><a name="line-94"></a><span class="hs-comment">-- @as@.</span><span>
-</span><a name="line-95"></a><span class="hs-comment">--</span><span>
-</span><a name="line-96"></a><span class="hs-comment">-- @'Length' as@ is equivalent to @'Prod' 'Proxy' as@, so this is basically</span><span>
-</span><a name="line-97"></a><span class="hs-comment">--</span><span>
-</span><a name="line-98"></a><span class="hs-comment">-- @</span><span>
-</span><a name="line-99"></a><span class="hs-comment">-- 'singLength' = 'map1' ('const' 'Proxy') . 'singProd'</span><span>
-</span><a name="line-100"></a><span class="hs-comment">-- @</span><span>
-</span><a name="line-101"></a><span class="hs-identifier">singLength</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-keyword">as</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Length</span><span> </span><span class="hs-keyword">as</span><span>
-</span><a name="line-102"></a><a name="singLength"><a href="Data.Type.Combinator.Singletons.html#singLength"><span class="hs-identifier">singLength</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-keyword">case</span><span>
-</span><a name="line-103"></a><span>    </span><span class="hs-identifier hs-var">SNil</span><span>         </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">LZ</span><span>
-</span><a name="line-104"></a><span>    </span><span class="hs-identifier">_</span><span> </span><span class="hs-special">`</span><span class="hs-identifier hs-var">SCons</span><span class="hs-special">`</span><span> </span><a name="local-6989586621679100177"><a href="#local-6989586621679100177"><span class="hs-identifier">xs</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">LS</span><span> </span><span class="hs-special">(</span><a href="Data.Type.Combinator.Singletons.html#singLength"><span class="hs-identifier hs-var">singLength</span></a><span> </span><a href="#local-6989586621679100177"><span class="hs-identifier hs-var">xs</span></a><span class="hs-special">)</span><span>
-</span><a name="line-105"></a><span>
-</span><a name="line-106"></a><span class="hs-comment">-- | Convert a 'Boolean' singleton for @a@ into the 'Sing' singleton for</span><span>
-</span><a name="line-107"></a><span class="hs-comment">-- @a@.</span><span>
-</span><a name="line-108"></a><span class="hs-identifier">boolSing</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Boolean</span><span> </span><a href="#local-6989586621679100169"><span class="hs-identifier hs-type">b</span></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100169"><span class="hs-identifier hs-type">b</span></a><span>
-</span><a name="line-109"></a><a name="boolSing"><a href="Data.Type.Combinator.Singletons.html#boolSing"><span class="hs-identifier">boolSing</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-keyword">case</span><span>
-</span><a name="line-110"></a><span>    </span><span class="hs-identifier hs-var">False_</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">SFalse</span><span>
-</span><a name="line-111"></a><span>    </span><span class="hs-identifier hs-var">True_</span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">STrue</span><span>
-</span><a name="line-112"></a><span>
-</span><a name="line-113"></a><span class="hs-comment">-- | Convert a 'Sing' singleton for @b@ to a 'Boolean' singleton for @b@.</span><span>
-</span><a name="line-114"></a><span class="hs-identifier">singBool</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100168"><span class="hs-identifier hs-type">b</span></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Boolean</span><span> </span><a href="#local-6989586621679100168"><span class="hs-identifier hs-type">b</span></a><span>
-</span><a name="line-115"></a><a name="singBool"><a href="Data.Type.Combinator.Singletons.html#singBool"><span class="hs-identifier">singBool</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-keyword">case</span><span>
-</span><a name="line-116"></a><span>    </span><span class="hs-identifier hs-var">SFalse</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">False_</span><span>
-</span><a name="line-117"></a><span>    </span><span class="hs-identifier hs-var">STrue</span><span>  </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-var">True_</span><span>
-</span><a name="line-118"></a><span>
-</span><a name="line-119"></a><a href="Data.Type.Combinator.Singletons.html#SS"><span class="hs-identifier hs-var">genSingletons</span></a><span> </span><span class="hs-special">[</span><span class="hs-char">''N]
+</span><a name="line-34"></a><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-35"></a><span>
+</span><a name="line-36"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Kind</span><span>
+</span><a name="line-37"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span>
+</span><a name="line-38"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span class="hs-operator">.</span><span class="hs-identifier">Prelude</span><span>
+</span><a name="line-39"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Singletons</span><span class="hs-operator">.</span><span class="hs-identifier">TH</span><span>
+</span><a name="line-40"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Boolean</span><span>
+</span><a name="line-41"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Conjunction</span><span>
+</span><a name="line-42"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Disjunction</span><span>
+</span><a name="line-43"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Length</span><span>
+</span><a name="line-44"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Option</span><span>
+</span><a name="line-45"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Product</span><span>
+</span><a name="line-46"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Class</span><span class="hs-operator">.</span><span class="hs-identifier">Higher</span><span>
+</span><a name="line-47"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Class</span><span class="hs-operator">.</span><span class="hs-identifier">Known</span><span>
+</span><a name="line-48"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Data</span><span class="hs-operator">.</span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Nat</span><span>
+</span><a name="line-49"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Class</span><span class="hs-operator">.</span><span class="hs-identifier">Witness</span><span>
+</span><a name="line-50"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Family</span><span class="hs-operator">.</span><span class="hs-identifier">Constraint</span><span>
+</span><a name="line-51"></a><span class="hs-keyword">import</span><span>           </span><span class="hs-identifier">Type</span><span class="hs-operator">.</span><span class="hs-identifier">Family</span><span class="hs-operator">.</span><span class="hs-identifier">Nat</span><span>
+</span><a name="line-52"></a><span>
+</span><a name="line-53"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">SingI</span><span> </span><a href="#local-6989586621679100184"><span class="hs-identifier hs-type">a</span></a><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-identifier hs-type">Known</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100184"><span class="hs-identifier hs-type">a</span></a><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-54"></a><span>    </span><span class="hs-keyword">type</span><span> </span><span class="hs-identifier">KnownC</span><span> </span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100184"><span class="hs-identifier hs-type">a</span></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-type">SingI</span><span> </span><a href="#local-6989586621679100184"><span class="hs-identifier hs-type">a</span></a><span>
+</span><a name="line-55"></a><span>    </span><a name="local-8214565720323802286"><span class="hs-identifier">known</span></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">sing</span><span>
+</span><a name="line-56"></a><span>
+</span><a name="line-57"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">Witness</span><span> </span><span class="hs-identifier hs-type">&#216;C</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">SingI</span><span> </span><a href="#local-6989586621679100181"><span class="hs-identifier hs-type">a</span></a><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Sing</span><span> </span><a href="#local-6989586621679100181"><span class="hs-identifier hs-type">a</span></a><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-58"></a><span>    </span><a name="local-6989586621679100182"><a href="#local-6989586621679100182"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802262"><span class="hs-operator">\\</span></a><span> </span><a name="local-6989586621679100183"><a href="#local-6989586621679100183"><span class="hs-identifier">s</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">withSingI</span><span> </span><a href="#local-6989586621679100183"><span class="hs-identifier hs-var">s</span></a><span> </span><a href="#local-6989586621679100182"><span class="hs-identifier hs-var">x</span></a><span>
+</span><a name="line-59"></a><span>
+</span><a name="line-60"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">SEq</span><span> </span><a href="#local-6989586621679100176"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-identifier hs-type">Eq1</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-glyph">::</span><span> </span><a href="#local-6989586621679100176"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Type</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-61"></a><span>    </span><a name="local-8214565720323802024"><span class="hs-identifier">eq1</span></a><span>  </span><a name="local-6989586621679100177"><a href="#local-6989586621679100177"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-6989586621679100178"><a href="#local-6989586621679100178"><span class="hs-identifier">y</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100177"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:==</span><span> </span><a href="#local-6989586621679100178"><span class="hs-identifier hs-var">y</span></a><span>
+</span><a name="line-62"></a><span>    </span><a name="local-8214565720323802023"><span class="hs-identifier">neq1</span></a><span> </span><a name="local-6989586621679100179"><a href="#local-6989586621679100179"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-6989586621679100180"><a href="#local-6989586621679100180"><span class="hs-identifier">y</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100179"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:/=</span><span> </span><a href="#local-6989586621679100180"><span class="hs-identifier hs-var">y</span></a><span>
+</span><a name="line-63"></a><span>
+</span><a name="line-64"></a><span class="hs-keyword">instance</span><span> </span><span class="hs-identifier hs-type">SOrd</span><span> </span><a href="#local-6989586621679100164"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">=&gt;</span><span> </span><span class="hs-identifier hs-type">Ord1</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Sing</span><span> </span><span class="hs-glyph">::</span><span> </span><a href="#local-6989586621679100164"><span class="hs-identifier hs-type">k</span></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-identifier hs-type">Type</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-65"></a><span>    </span><a name="local-8214565720323802036"><span class="hs-identifier">compare1</span></a><span> </span><a name="local-6989586621679100165"><a href="#local-6989586621679100165"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-6989586621679100166"><a href="#local-6989586621679100166"><span class="hs-identifier">y</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><span class="hs-identifier hs-var">sCompare</span><span> </span><a href="#local-6989586621679100165"><span class="hs-identifier hs-var">x</span></a><span> </span><a href="#local-6989586621679100166"><span class="hs-identifier hs-var">y</span></a><span>
+</span><a name="line-66"></a><span>    </span><a name="local-6989586621679100167"><a href="#local-6989586621679100167"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802035"><span class="hs-operator">&lt;#</span></a><span> </span><a name="local-6989586621679100168"><a href="#local-6989586621679100168"><span class="hs-identifier">y</span></a></a><span>       </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100167"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&lt;</span><span> </span><a href="#local-6989586621679100168"><span class="hs-identifier hs-var">y</span></a><span>
+</span><a name="line-67"></a><span>    </span><a name="local-6989586621679100169"><a href="#local-6989586621679100169"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802034"><span class="hs-operator">&gt;#</span></a><span> </span><a name="local-6989586621679100170"><a href="#local-6989586621679100170"><span class="hs-identifier">y</span></a></a><span>       </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100169"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&gt;</span><span> </span><a href="#local-6989586621679100170"><span class="hs-identifier hs-var">y</span></a><span>
+</span><a name="line-68"></a><span>    </span><a name="local-6989586621679100171"><a href="#local-6989586621679100171"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802033"><span class="hs-operator">&lt;=#</span></a><span> </span><a name="local-6989586621679100172"><a href="#local-6989586621679100172"><span class="hs-identifier">y</span></a></a><span>      </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100171"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&lt;=</span><span> </span><a href="#local-6989586621679100172"><span class="hs-identifier hs-var">y</span></a><span>
+</span><a name="line-69"></a><span>    </span><a name="local-6989586621679100173"><a href="#local-6989586621679100173"><span class="hs-identifier">x</span></a></a><span> </span><a name="local-8214565720323802032"><span class="hs-operator">&gt;=#</span></a><span> </span><a name="local-6989586621679100174"><a href="#local-6989586621679100174"><span class="hs-identifier">y</span></a></a><span>      </span><span class="hs-glyph">=</span><span> </span><span class="hs-identifier hs-var">fromSing</span><span> </span><span class="hs-operator hs-var">$</span><span> </span><a href="#local-6989586621679100173"><span class="hs-identifier hs-var">x</span></a><span> </span><span class="hs-operator hs-var">%:&gt;=</span><span> </span><a href="#local-6989586621679100174"><span class="hs-identifier hs-var">y</span></a><span>
+</span><a name="line-70"></a><span>
+</span><a name="line-71"></a><a href="Data.Type.Combinator.Singletons.html#SS"><span class="hs-identifier hs-var">genSingletons</span></a><span> </span><span class="hs-special">[</span><span class="hs-char">''N]
 
--- | Convert a 'Nat' singleton for @n@ to a 'Sing' singleton for @n@.
-natSing :: Nat n -&gt; Sing n
-natSing = \case
-    Z_   -&gt; SZ
-    S_ n -&gt; SS (natSing n)
+-- | Typeclass for /type-combinator/ types that can be converted to and
+-- from singletons.
+class TC f where
+    -- | Convert a /type-combinator/ type that is equivalent to a singleton
+    -- into its equivalent 'Sing'.
+    fromTC :: f a -&gt; Sing a
+    -- | Convert a 'Sing' into its equivalent /type-combinator/ type.
+    toTC   :: Sing a -&gt; f a
 
--- | Convert a 'Sing' singleton for @n@ to a 'Nat' singleton for @n@.
-singNat :: Sing n -&gt; Nat n
-singNat = \case
-    SZ   -&gt; Z_
-    SS n -&gt; S_ (singNat n)
+instance TC (Prod Sing) where
+    toTC = \case
+        SNil         -&gt; &#216;
+        x `SCons` xs -&gt; x :&lt; toTC xs
+    fromTC = \case
+        &#216;       -&gt; SNil
+        x :&lt; xs -&gt; x `SCons` fromTC xs
 
--- | Convert a ':*:' tupling of @'Sing' a@ and @'Sing' b@ into a single
--- 'Sing' for @'(a, b)@.
-parSing :: (Sing :*: Sing) '(a, b) -&gt; Sing '(a, b)
-parSing (x :*: y) = STuple2 x y
+instance TC Boolean where
+    fromTC = \case
+      False_ -&gt; SFalse
+      True_  -&gt; STrue
+    toTC   = \case
+      SFalse -&gt; False_
+      STrue  -&gt; True_
 
--- | Convert a 'Sing' of @'(a, b)@ to a ':*:' tupling of @'Sing' a@ and
--- @'Sing' b@.
-singPar :: Sing '(a, b) -&gt; (Sing :*: Sing) '(a, b)
-singPar (STuple2 x y) = x :*: y
+instance TC Nat where
+    fromTC = \case
+      Z_   -&gt; SZ
+      S_ n -&gt; SS (fromTC n)
+    toTC   = \case
+      SZ   -&gt; Z_
+      SS n -&gt; S_ (toTC n)
 
--- | Convert a ':+:' sum between a @'Sing' a@ and @'Sing' b@ into
--- a 'Sing' of a sum ('Either') of @a@ and @b@.
-choiceSing :: (Sing :+: Sing) e -&gt; Sing e
-choiceSing = \case
-    L' x -&gt; SLeft x
-    R' x -&gt; SRight x
+instance TC (Sing :*: Sing) where
+    fromTC (x :*: y)     = STuple2 x y
+    toTC   (STuple2 x y) = x :*: y
 
--- | Convert a 'Sing' of a sum ('Either') of @a@ and @b@ to a ':+:' sum
--- between @'Sing' a@ and @'Sing' b@.
-singChoice :: Sing e -&gt; (Sing :+: Sing) e
-singChoice = \case
-    SLeft x  -&gt; L' x
-    SRight x -&gt; R' x
+instance TC (Sing :+: Sing) where
+    fromTC = \case
+      L' x -&gt; SLeft x
+      R' x -&gt; SRight x
+    toTC = \case
+      SLeft  x -&gt; L' x
+      SRight x -&gt; R' x
 
--- | Convert an 'Option' of @'Sing' a@ to a 'Sing' of an optional ('Maybe')
--- @a@.
-optionSing :: Option Sing a -&gt; Sing a
-optionSing = \case
-    Nothing_ -&gt; SNothing
-    Just_ x  -&gt; SJust x
+instance TC (Option Sing) where
+    fromTC = \case
+      Nothing_ -&gt; SNothing
+      Just_ x  -&gt; SJust x
+    toTC   = \case
+      SNothing -&gt; Nothing_
+      SJust x  -&gt; Just_ x
 
--- | Convert a 'Sing' of an optional ('Maybe') @a@ to an 'Option' of
--- @'Sing' a@.
-singOption :: Sing a -&gt; Option Sing a
-singOption = \case
-    SNothing -&gt; Nothing_
-    SJust x  -&gt; Just_ x
+-- | Convert a 'Sing' for @as@ into a 'Length' representing the length of
+-- @as@.
+--
+-- @'Length' as@ is equivalent to @'Prod' 'Proxy' as@, so this is basically
+--
+-- @
+-- 'singLength' :: 'Sing' as -&gt; 'Prod' 'Proxy' as
+-- 'singLength' = 'map1' ('const' 'Proxy') . 'toTC'
+-- @
+--
+-- This function is one-way, since the actual run-time information on the
+-- types in @as@ is lost.
+singLength :: Sing as -&gt; Length as
+singLength = \case
+    SNil         -&gt; LZ
+    _ `SCons` xs -&gt; LS (singLength xs)
+
 </span></pre></body></html>
