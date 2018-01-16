@@ -2,6 +2,7 @@
 {-# LANGUAGE GADTs                 #-}
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE PolyKinds             #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeInType            #-}
@@ -11,7 +12,7 @@
 -- |
 -- Module      : Data.Type.Combinator.Singletons
 -- Description : Conversions between datatypes in /type-combinators/ and
---               singletons from /singletons/.
+--               singletons from /singletons/ and orphan instances.
 -- Copyright   : (c) Justin Le 2017
 -- License     : BSD-3
 -- Maintainer  : justin@jle.im
@@ -20,25 +21,16 @@
 --
 -- There's a lot of identical data types between /type-combinators/ and
 -- /singetons/, as well as similar typeclasses.  This module provides
--- conversion functions between the two, and also many appropriate
--- instances.
+-- conversion functions between the two (through the 'TC' typeclass), and
+-- also many appropriate orphan instances.
 --
 
 module Data.Type.Combinator.Singletons (
-    prodSing
-  , singProd
+  -- * Conversion functions
+    TC(..)
   , singLength
-  , boolSing
-  , singBool
+  -- * Orphan singleton instance for 'N'
   , Sing(SZ, SS), SN, ZSym0, SSym0, SSym1
-  , natSing
-  , singNat
-  , parSing
-  , singPar
-  , choiceSing
-  , singChoice
-  , optionSing
-  , singOption
   ) where
 
 import           Data.Kind
@@ -76,19 +68,60 @@ instance SOrd k => Ord1 (Sing :: k -> Type) where
     x <=# y      = fromSing $ x %:<= y
     x >=# y      = fromSing $ x %:>= y
 
--- | Convert a 'Prod' of 'Sing's of individual values in @as@ to a 'Sing'
--- for all @as@ together.
-prodSing :: Prod Sing as -> Sing as
-prodSing = \case
-    Ø       -> SNil
-    x :< xs -> x `SCons` prodSing xs
+genSingletons [''N]
 
--- | Convert a 'Sing' for @as@ to a 'Prod' of 'Sing's of each individual
--- value in @as@.
-singProd :: Sing as -> Prod Sing as
-singProd = \case
-    SNil         -> Ø
-    x `SCons` xs -> x :< singProd xs
+-- | Typeclass for /type-combinator/ types that can be converted to and
+-- from singletons.
+class TC f where
+    -- | Convert a /type-combinator/ type that is equivalent to a singleton
+    -- into its equivalent 'Sing'.
+    fromTC :: f a -> Sing a
+    -- | Convert a 'Sing' into its equivalent /type-combinator/ type.
+    toTC   :: Sing a -> f a
+
+instance TC (Prod Sing) where
+    toTC = \case
+        SNil         -> Ø
+        x `SCons` xs -> x :< toTC xs
+    fromTC = \case
+        Ø       -> SNil
+        x :< xs -> x `SCons` fromTC xs
+
+instance TC Boolean where
+    fromTC = \case
+      False_ -> SFalse
+      True_  -> STrue
+    toTC   = \case
+      SFalse -> False_
+      STrue  -> True_
+
+instance TC Nat where
+    fromTC = \case
+      Z_   -> SZ
+      S_ n -> SS (fromTC n)
+    toTC   = \case
+      SZ   -> Z_
+      SS n -> S_ (toTC n)
+
+instance TC (Sing :*: Sing) where
+    fromTC (x :*: y)     = STuple2 x y
+    toTC   (STuple2 x y) = x :*: y
+
+instance TC (Sing :+: Sing) where
+    fromTC = \case
+      L' x -> SLeft x
+      R' x -> SRight x
+    toTC = \case
+      SLeft  x -> L' x
+      SRight x -> R' x
+
+instance TC (Option Sing) where
+    fromTC = \case
+      Nothing_ -> SNothing
+      Just_ x  -> SJust x
+    toTC   = \case
+      SNothing -> Nothing_
+      SJust x  -> Just_ x
 
 -- | Convert a 'Sing' for @as@ into a 'Length' representing the length of
 -- @as@.
@@ -96,74 +129,14 @@ singProd = \case
 -- @'Length' as@ is equivalent to @'Prod' 'Proxy' as@, so this is basically
 --
 -- @
--- 'singLength' = 'map1' ('const' 'Proxy') . 'singProd'
+-- 'singLength' :: 'Sing' as -> 'Prod' 'Proxy' as
+-- 'singLength' = 'map1' ('const' 'Proxy') . 'toTC'
 -- @
+--
+-- This function is one-way, since the actual run-time information on the
+-- types in @as@ is lost.
 singLength :: Sing as -> Length as
 singLength = \case
     SNil         -> LZ
     _ `SCons` xs -> LS (singLength xs)
 
--- | Convert a 'Boolean' singleton for @a@ into the 'Sing' singleton for
--- @a@.
-boolSing :: Boolean b -> Sing b
-boolSing = \case
-    False_ -> SFalse
-    True_  -> STrue
-
--- | Convert a 'Sing' singleton for @b@ to a 'Boolean' singleton for @b@.
-singBool :: Sing b -> Boolean b
-singBool = \case
-    SFalse -> False_
-    STrue  -> True_
-
-genSingletons [''N]
-
--- | Convert a 'Nat' singleton for @n@ to a 'Sing' singleton for @n@.
-natSing :: Nat n -> Sing n
-natSing = \case
-    Z_   -> SZ
-    S_ n -> SS (natSing n)
-
--- | Convert a 'Sing' singleton for @n@ to a 'Nat' singleton for @n@.
-singNat :: Sing n -> Nat n
-singNat = \case
-    SZ   -> Z_
-    SS n -> S_ (singNat n)
-
--- | Convert a ':*:' tupling of @'Sing' a@ and @'Sing' b@ into a single
--- 'Sing' for @'(a, b)@.
-parSing :: (Sing :*: Sing) '(a, b) -> Sing '(a, b)
-parSing (x :*: y) = STuple2 x y
-
--- | Convert a 'Sing' of @'(a, b)@ to a ':*:' tupling of @'Sing' a@ and
--- @'Sing' b@.
-singPar :: Sing '(a, b) -> (Sing :*: Sing) '(a, b)
-singPar (STuple2 x y) = x :*: y
-
--- | Convert a ':+:' sum between a @'Sing' a@ and @'Sing' b@ into
--- a 'Sing' of a sum ('Either') of @a@ and @b@.
-choiceSing :: (Sing :+: Sing) e -> Sing e
-choiceSing = \case
-    L' x -> SLeft x
-    R' x -> SRight x
-
--- | Convert a 'Sing' of a sum ('Either') of @a@ and @b@ to a ':+:' sum
--- between @'Sing' a@ and @'Sing' b@.
-singChoice :: Sing e -> (Sing :+: Sing) e
-singChoice = \case
-    SLeft x  -> L' x
-    SRight x -> R' x
-
--- | Convert an 'Option' of @'Sing' a@ to a 'Sing' of an optional ('Maybe')
--- @a@.
-optionSing :: Option Sing a -> Sing a
-optionSing = \case
-    Nothing_ -> SNothing
-    Just_ x  -> SJust x
-
--- | Convert a 'Sing' of an optional ('Maybe') @a@ to an 'Option' of
--- @'Sing' a@.
-singOption :: Sing a -> Option Sing a
-singOption = \case
-    SNothing -> Nothing_
-    SJust x  -> Just_ x

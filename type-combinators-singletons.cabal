@@ -1,8 +1,8 @@
 name:                type-combinators-singletons
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Interop between /type-combinators/ and /singletons/.
 description:         Conversions between datatypes in /type-combinators/ and
-                     singletons from /singletons/.
+                     singletons from /singletons/ and orphan instances.
 homepage:            https://github.com/mstksg/type-combinators-singletons
 license:             BSD3
 license-file:        LICENSE
