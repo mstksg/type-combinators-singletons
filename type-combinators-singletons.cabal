@@ -1,5 +1,5 @@
 name:                type-combinators-singletons
-version:             0.2.0.0
+version:             0.2.1.0
 synopsis:            Interop between /type-combinators/ and /singletons/.
 description:         Conversions between datatypes in /type-combinators/ and
                      singletons from /singletons/ and orphan instances.
@@ -25,15 +25,6 @@ library
                      , singletons
   default-language:    Haskell2010
   ghc-options:         -Wall
-
--- test-suite type-combinators-singletons-test
---   type:                exitcode-stdio-1.0
---   hs-source-dirs:      test
---   main-is:             Spec.hs
---   build-depends:       base
---                      , type-combinators-singletons
---   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
---   default-language:    Haskell2010
 
 source-repository head
   type:     git

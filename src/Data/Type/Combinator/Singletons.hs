@@ -29,6 +29,8 @@ module Data.Type.Combinator.Singletons (
   -- * Conversion functions
     TC(..)
   , singLength
+  , singSome, someSing
+  , singWit1, wit1Sing
   -- * Orphan singleton instance for 'N'
   , Sing(SZ, SS), SN, ZSym0, SSym0, SSym1
   ) where
@@ -139,4 +141,24 @@ singLength :: Sing as -> Length as
 singLength = \case
     SNil         -> LZ
     _ `SCons` xs -> LS (singLength xs)
+
+-- | Convert @'SomeSing' k@ from /singletons/ into the more generic
+-- representation @'Some' 'Sing'@, from /type-combinators/.
+singSome :: SomeSing k -> Some (Sing :: k -> Type)
+singSome (SomeSing s) = Some s
+
+-- | Convert the generic representation @'Some' 'Sing'@ from
+-- /type-combinatprs/ to @'SomeSing' k@, from /singletons/.
+someSing :: Some (Sing :: k -> Type) -> SomeSing k
+someSing ss = some ss SomeSing
+
+-- | Convert a @'SingInstance' a@ from /singletons/ into the more generic
+-- representation @'Wit1' 'SingI' a@.
+singWit1 :: SingInstance a -> Wit1 SingI a
+singWit1 SingInstance = Wit1
+
+-- | Convert the generic representation @'Wit1' 'SIngI' a@ from
+-- /type-combinators/ to @'SingInstance' a@ from /singletons/.
+wit1Sing :: Wit1 SingI a -> SingInstance a
+wit1Sing Wit1 = SingInstance
 
