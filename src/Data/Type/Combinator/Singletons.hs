@@ -3,6 +3,7 @@
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE PolyKinds             #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE TemplateHaskell       #-}
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeInType            #-}
@@ -60,15 +61,15 @@ instance Witness ØC (SingI a) (Sing a) where
     x \\ s = withSingI s x
 
 instance SEq k => Eq1 (Sing :: k -> Type) where
-    eq1  x y = fromSing $ x %:== y
-    neq1 x y = fromSing $ x %:/= y
+    eq1  x y = fromSing $ x %== y
+    neq1 x y = fromSing $ x %/= y
 
 instance SOrd k => Ord1 (Sing :: k -> Type) where
     compare1 x y = fromSing $ sCompare x y
-    x <# y       = fromSing $ x %:< y
-    x ># y       = fromSing $ x %:> y
-    x <=# y      = fromSing $ x %:<= y
-    x >=# y      = fromSing $ x %:>= y
+    x <# y       = fromSing $ x %< y
+    x ># y       = fromSing $ x %> y
+    x <=# y      = fromSing $ x %<= y
+    x >=# y      = fromSing $ x %>= y
 
 genSingletons [''N]
 
