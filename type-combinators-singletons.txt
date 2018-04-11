@@ -7,7 +7,7 @@
 --   Conversions between datatypes in <i>type-combinators</i> and
 --   singletons from <i>singletons</i> and orphan instances.
 @package type-combinators-singletons
-@version 0.2.0.0
+@version 0.2.1.0
 
 
 -- | There's a lot of identical data types between <i>type-combinators</i>
@@ -42,22 +42,41 @@ toTC :: TC f => Sing a -> f a
 --   types in <tt>as</tt> is lost.
 singLength :: Sing as -> Length as
 
+-- | Convert <tt><a>SomeSing</a> k</tt> from <i>singletons</i> into the
+--   more generic representation <tt><a>Some</a> <a>Sing</a></tt>, from
+--   <i>type-combinators</i>.
+singSome :: SomeSing k -> Some (Sing :: k -> Type)
+
+-- | Convert the generic representation <tt><a>Some</a> <a>Sing</a></tt>
+--   from <i>type-combinatprs</i> to <tt><a>SomeSing</a> k</tt>, from
+--   <i>singletons</i>.
+someSing :: Some (Sing :: k -> Type) -> SomeSing k
+
+-- | Convert a <tt><a>SingInstance</a> a</tt> from <i>singletons</i> into
+--   the more generic representation <tt><a>Wit1</a> <a>SingI</a> a</tt>.
+singWit1 :: SingInstance a -> Wit1 SingI a
+
+-- | Convert the generic representation <tt><a>Wit1</a> <tt>SIngI</tt>
+--   a</tt> from <i>type-combinators</i> to <tt><a>SingInstance</a> a</tt>
+--   from <i>singletons</i>.
+wit1Sing :: Wit1 SingI a -> SingInstance a
+
 -- | The singleton kind-indexed data family.
 type SN = (Sing :: N -> Type)
 type ZSym0 = Z
-data SSym0 (l_aoai :: TyFun N N)
-type SSym1 (t_aoah :: N) = S t_aoah
-instance Data.Singletons.SuppressUnusedWarnings.SuppressUnusedWarnings Data.Type.Combinator.Singletons.SSym0
-instance Data.Singletons.SingKind Type.Family.Nat.N
-instance Data.Singletons.SingI 'Type.Family.Nat.Z
-instance Data.Singletons.SingI n0 => Data.Singletons.SingI ('Type.Family.Nat.S n0)
-instance Data.Type.Combinator.Singletons.TC (Data.Type.Product.Prod Data.Singletons.Sing)
+data SSym0 (l_anhI :: TyFun N N)
+type SSym1 (t_anhH :: N) = S t_anhH
+instance Data.Type.Combinator.Singletons.TC (Data.Type.Product.Prod Data.Singletons.Internal.Sing)
 instance Data.Type.Combinator.Singletons.TC Data.Type.Boolean.Boolean
 instance Data.Type.Combinator.Singletons.TC Data.Type.Nat.Nat
-instance Data.Type.Combinator.Singletons.TC (Data.Singletons.Sing Data.Type.Conjunction.:*: Data.Singletons.Sing)
-instance Data.Type.Combinator.Singletons.TC (Data.Singletons.Sing Data.Type.Disjunction.:+: Data.Singletons.Sing)
-instance Data.Type.Combinator.Singletons.TC (Data.Type.Option.Option Data.Singletons.Sing)
-instance forall k (a :: k). Data.Singletons.SingI a => Type.Class.Known.Known Data.Singletons.Sing a
-instance forall k (a :: k). Type.Class.Witness.Witness Type.Family.Constraint.ØC (Data.Singletons.SingI a) (Data.Singletons.Sing a)
-instance forall k (k1 :: k) k2. Data.Singletons.Prelude.Eq.SEq k2 => Type.Class.Higher.Eq1 Data.Singletons.Sing
-instance forall k (k1 :: k) k2. Data.Singletons.Prelude.Ord.SOrd k2 => Type.Class.Higher.Ord1 Data.Singletons.Sing
+instance Data.Type.Combinator.Singletons.TC (Data.Singletons.Internal.Sing Data.Type.Conjunction.:*: Data.Singletons.Internal.Sing)
+instance Data.Type.Combinator.Singletons.TC (Data.Singletons.Internal.Sing Data.Type.Disjunction.:+: Data.Singletons.Internal.Sing)
+instance Data.Type.Combinator.Singletons.TC (Data.Type.Option.Option Data.Singletons.Internal.Sing)
+instance Data.Singletons.SuppressUnusedWarnings.SuppressUnusedWarnings Data.Type.Combinator.Singletons.SSym0
+instance Data.Singletons.Internal.SingKind Type.Family.Nat.N
+instance Data.Singletons.Internal.SingI 'Type.Family.Nat.Z
+instance Data.Singletons.Internal.SingI n => Data.Singletons.Internal.SingI ('Type.Family.Nat.S n)
+instance forall k (a :: k). Data.Singletons.Internal.SingI a => Type.Class.Known.Known Data.Singletons.Internal.Sing a
+instance forall k (a :: k). Type.Class.Witness.Witness Type.Family.Constraint.ØC (Data.Singletons.Internal.SingI a) (Data.Singletons.Internal.Sing a)
+instance Data.Singletons.Prelude.Eq.SEq k => Type.Class.Higher.Eq1 Data.Singletons.Internal.Sing
+instance Data.Singletons.Prelude.Ord.SOrd k => Type.Class.Higher.Ord1 Data.Singletons.Internal.Sing
