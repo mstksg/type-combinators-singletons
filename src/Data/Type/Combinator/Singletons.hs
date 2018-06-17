@@ -1,3 +1,5 @@
+{-# LANGUAGE EmptyCase             #-}
+{-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE FlexibleInstances     #-}
 {-# LANGUAGE GADTs                 #-}
 {-# LANGUAGE LambdaCase            #-}
@@ -8,6 +10,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeInType            #-}
 {-# LANGUAGE TypeOperators         #-}
+{-# LANGUAGE UndecidableInstances  #-}
 {-# OPTIONS_GHC -fno-warn-orphans  #-}
 
 -- |
@@ -72,6 +75,10 @@ instance SOrd k => Ord1 (Sing :: k -> Type) where
     x >=# y      = fromSing $ x %>= y
 
 genSingletons [''N]
+promoteEqInstance ''N
+singDecideInstance ''N
+promoteOrdInstance ''N
+promoteShowInstance ''N
 
 -- | Typeclass for /type-combinator/ types that can be converted to and
 -- from singletons.

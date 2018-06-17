@@ -1,6 +1,16 @@
 Changelog
 =========
 
+Version 0.2.2.0
+---------------
+
+*Unreleased*
+
+<https://github.com/mstksg/type-combinators-singletons/releases/tag/v0.2.2.0>
+
+*   Updated to work with *singletons-2.4.1*.
+*   `SEq`, `SDecide`, `SOrd`, `SShow` instances for `N`
+
 Version 0.2.1.0
 ---------------
 

@@ -15,7 +15,7 @@
 # resolver:
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
-resolver: nightly-2018-04-11
+resolver: nightly-2018-06-13
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -41,6 +41,7 @@ packages:
     git: https://github.com/mstksg/type-combinators.git
     commit: 13e7d4bd99b1a80b5fdb436a85ee52cfa0ff799f
   extra-dep: true
+
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)
 extra-deps: []
